@@ -1,0 +1,77 @@
+
+<html>
+<h1 align="center"><img src="C:\Users\santhosh\Documents\NetBeansProjects\week10 register and 
+login\hi.jpg"> Online Shopping</h1>
+<h4 align="center"> Registration Page</h4>
+<form action="reg.jsp" method="post"> 
+Email :<input type="text" name="email" />
+First name :<input type="text" name="fname" />
+Last name :<input type="text" name="lname" />
+User name :<input type="text" name="userid" />
+password :<input type="password" name="pwd" />
+<input type="submit" /> 
+</form>
+</html>
+//REG.JSP
+<%@ page import ="java.sql.*" %>
+<%@ page import ="javax.sql.*" %>
+<%
+String user=request.getParameter("userid"); 
+session.putValue("userid",user); 
+String pwd=request.getParameter("pwd"); 
+String fname=request.getParameter("fname"); 
+String lname=request.getParameter("lname"); 
+String email=request.getParameter("email"); 
+Class.forName("com.mysql.jdbc.Driver"); 
+java.sql.Connection con = 
+DriverManager.getConnection("jdbc:mysql://localhost:3306/test","root","admin"); 
+Statement st= con.createStatement(); 
+ResultSet rs; 
+int i=st.executeUpdate("insert into users values 
+('"+user+"','"+pwd+"','"+fname+"','"+lname+"','"+email+"')");
+%>
+<p>Registration sucessfull</p>
+//LOGIN.HTML
+<html> <head><title>login</title>
+</head> <body>
+ <h1 align="center"><img src="C:\Users\santhosh\Pictures\hi.jpg">
+Online Shopping</h1> <form action="check.jsp" method="post"> <div align="center">
+Username:<input type="text" size="10" name="uname" value=""/><br><br>
+Password:<input type="password" size="10" name="pwd" value=""/><br><br> <input type="submit" value="submit" />
+<input type="reset" value="reset"/>
+</div>
+</form>
+</body>
+</html>
+//CHECK.JSP
+<%@page language="java" import="java.sql.*" %>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.Connection"%>
+<%
+Connection connection = null;
+Statement statement = null;
+ResultSet resultSet = null;
+%>
+<%
+try {
+Class.forName("com.mysql.jdbc.Driver");
+connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", 
+"admin");
+statement = connection.createStatement();
+String uname=request.getParameter("uname");
+String pwd=request.getParameter("pwd");
+String sql = "SELECT * FROM users where user_id='"+uname+"' and password='"+pwd+"'";
+resultSet = statement.executeQuery(sql);
+if(resultSet.next())
+ out.println("welcome '"+uname+"'!! Login Successfull");
+else
+{
+ 
+ response.sendRedirect("login.html");
+}}
+catch (Exception e) {
+e.printStackTrace();
+}
+%>
